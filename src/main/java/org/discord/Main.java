@@ -38,4 +38,8 @@ public class Main {
         );
         commands.queue();
     }
+
+    public static boolean isBotOwner(String id) {
+        return id.equals("682471100726509589") || id.equals("419137051670347777");
+    }
 }

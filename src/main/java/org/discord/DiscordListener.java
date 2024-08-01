@@ -86,7 +86,7 @@ public class DiscordListener implements EventListener {
                 e.getChannel().sendMessage(e.getUser().getAsMention() + "님이 " + playerData.job.getName() + " 직업으로 전직했습니다!").setAllowedMentions(new ArrayList<>()).queue();
             }
         } else if (event instanceof MessageReceivedEvent e) {
-            if (e.getAuthor().getId().equals("682471100726509589")) {
+            if (Main.isBotOwner(e.getAuthor().getId())) {
                 if (e.getMessage().getContentRaw().equals("!끄다")) {
                     FileUtils.saveData(data);
                     e.getMessage().addReaction(Emoji.fromUnicode("✅")).queue();
