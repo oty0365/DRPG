@@ -13,7 +13,7 @@ public class Main {
     public static JDA jda;
     public static void main(String[] args) {
         DiscordListener.data = FileUtils.loadData();
-        JDABuilder builder = JDABuilder.createDefault("MTI2ODIwMzEzNTIxODc0NTQzOQ.GtycwN.mxn8dph0th8jRUqor-83qxaBLB2Y5cLhKTDstU");
+        JDABuilder builder = JDABuilder.createDefault(FileUtils.readToken());
         builder.setAutoReconnect(true);
         builder.setMemberCachePolicy(MemberCachePolicy.ALL);
         builder.setStatus(OnlineStatus.ONLINE);

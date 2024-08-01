@@ -13,6 +13,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class FileUtils {
+    public static String readToken() {
+        try {
+            return Files.readString(Path.of("BOTTOKEN.token"));
+        } catch (IOException e) {
+            e.printStackTrace(System.err);
+            return "";
+        }
+    }
     public static void saveData(HashMap<String, Data> data) {
         try {
             JsonObject o = new JsonObject();
