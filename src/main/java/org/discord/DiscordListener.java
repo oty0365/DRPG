@@ -19,6 +19,7 @@ import org.jetbrains.annotations.NotNull;
 import java.awt.*;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -32,10 +33,11 @@ public class DiscordListener implements EventListener {
             User u = e.getUser();
             if (e.getName().equals("trpg")) {
                 if (!data.getOrDefault(u.getId(), new Data()).hasPlayed) {
-                    try {
-                        e.replyFiles(FileUpload.fromData(new FileInputStream("startAdventure.png"), "image.png")).queue();
-                    } catch (FileNotFoundException ex) {
+                    InputStream image = Main.class.getClassLoader().getResourceAsStream("startAdventure.png");
+                    if (image == null) {
                         e.reply("당신의 신비한 모험이 지금 시작됩니다").queue();
+                    } else {
+                        e.replyFiles(FileUpload.fromData(image, "image.png")).queue();
                     }
                     Data dat = data.getOrDefault(u.getId(), new Data());
                     dat.hasPlayed = true;
@@ -46,7 +48,14 @@ public class DiscordListener implements EventListener {
                         case 0:
                             e.reply("당신은 어두컴컴한 묘지에서 누군가의 가호를 받고 일어났습니다..\n당신의 옷은 그을렸고 몸에는 신비로운 인장("+u.getName()+")이 박혀있는 듯 합니다.").queue();
                         case 1:
-                            var messageAction = e.reply("다음 직업 중 하나로 전직할 수 있습니다.");
+                            var messageAction = e.reply("눈을 희미하게 뜬 당신은 수많은 과거의 기억들을 떠올립니다..");
+                            InputStream image = Main.class.getClassLoader().getResourceAsStream("Ep1SelectionTime.png");
+                            if (image == null) {
+                                messageAction.addContent("\n# Ep1.선택의 시간\n과거의 기억들 중 하나를 선택하세요");
+                            } else {
+                                messageAction.addFiles(FileUpload.fromData(image, "image.png"));
+                                messageAction.addContent("\n과거의 기억들 중 하나를 선택하세요");
+                            }
                             List<Job> jobs = Arrays.stream(Job.values()).skip(1).toList();
                             for (int i = 0; i < jobs.size(); i++) {
                                 List<Button> buttons = new ArrayList<>();
@@ -55,6 +64,7 @@ public class DiscordListener implements EventListener {
                                 }
                                 messageAction.addActionRow(buttons);
                             }
+
                             messageAction.queue();
                             playerData.storyIndex++;
                             break;
@@ -87,7 +97,7 @@ public class DiscordListener implements EventListener {
                     e.reply("아직 플레이 기록이 없습니다!").queue();
                     return;
                 }
-                e.replyEmbeds(new EmbedBuilder().setTitle(u.getName() + "의 스테이터스").setColor(Color.green)
+                e.replyEmbeds(new EmbedBuilder().setTitle(u.getName() + "의 스테이터스").setColor(playerData.job.personalColor)
                         .setDescription("직업 : " + playerData.job.getEmoji().getFormatted() + " " + playerData.job.getName())
                         .build()).queue();
                 return;
@@ -109,7 +119,7 @@ public class DiscordListener implements EventListener {
                     return;
                 }
                 playerData.job = Job.valueOf(e.getButton().getId().substring("jobSelection__".length() + e.getUser().getId().length()));
-                e.getChannel().editMessageById(e.getMessageId(), e.getUser().getAsMention() + "님이 " + playerData.job.getName() + " 직업으로 전직했습니다!").queue();
+                e.getChannel().sendMessage(e.getUser().getAsMention() + "님이 " + playerData.job.getName() + " 직업으로 전직했습니다!").queue();
                 e.getChannel().editMessageComponentsById(e.getMessageId()).queue();
             }
         } else if (event instanceof MessageReceivedEvent e) {
