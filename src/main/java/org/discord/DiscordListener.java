@@ -37,8 +37,6 @@ public class DiscordListener implements EventListener {
                     } catch (FileNotFoundException ex) {
                         e.reply("당신의 신비한 모험이 지금 시작됩니다").queue();
                     }
-                    e.getChannel().sendMessage("당신은 어두컴컴한 묘지에서 누군가의 가호를 받고 일어났습니다..").queue();
-                    e.getChannel().sendMessage("당신의 옷은 그을렸고 몸에는 신비로운 인장("+u.getName()+")이 박혀있는 듯 합니다.").queue();
                     Data dat = data.getOrDefault(u.getId(), new Data());
                     dat.hasPlayed = true;
                     data.put(u.getId(), dat);
@@ -46,6 +44,8 @@ public class DiscordListener implements EventListener {
                     Data playerData = data.get(u.getId());
                     switch (playerData.storyIndex) {
                         case 0:
+                            e.reply("당신은 어두컴컴한 묘지에서 누군가의 가호를 받고 일어났습니다..\n당신의 옷은 그을렸고 몸에는 신비로운 인장(\"+u.getName()+\")이 박혀있는 듯 합니다.").queue();
+                        case 1:
                             var messageAction = e.reply("다음 직업 중 하나로 전직할 수 있습니다.");
                             List<Job> jobs = Arrays.stream(Job.values()).skip(1).toList();
                             for (int i = 0; i < jobs.size(); i++) {
@@ -58,7 +58,7 @@ public class DiscordListener implements EventListener {
                             messageAction.queue();
                             playerData.storyIndex++;
                             break;
-                        case 1:
+                        case 2:
                             if (playerData.job.equals(Job.NONE)) {
                                 e.reply("직업을 골라주세요!").setEphemeral(true).queue();
                                 return;
@@ -66,7 +66,7 @@ public class DiscordListener implements EventListener {
                             e.reply("Next_Story: 직업 고른 후 스토리").queue();
                             playerData.storyIndex++;
                             break;
-                        case 2:
+                        case 3:
                             e.reply("Next_Story: 직업 고르고 진행 후 스토리").queue();
                             playerData.storyIndex++;
                             break;
