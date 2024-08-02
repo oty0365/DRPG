@@ -12,10 +12,10 @@ public enum Job {
     ASSASSIN("어쎄신", Emoji.fromUnicode("🥷"), Color.BLACK),
     PRIEST("프리스트", Emoji.fromUnicode("✝️"), Color.GREEN);
 
-    public final String name;
-    public final Emoji emoji;
+    private final String name;
+    private final Emoji emoji;
 
-    public final Color personalColor;
+    private final Color personalColor;
 
     Job(String name, Emoji emoji, Color personalColor) {
         this.name = name;

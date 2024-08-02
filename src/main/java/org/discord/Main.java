@@ -4,6 +4,7 @@ import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.Activity;
+import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.requests.restaction.CommandListUpdateAction;
 import net.dv8tion.jda.api.utils.MemberCachePolicy;
@@ -28,13 +29,10 @@ public class Main {
 
         CommandListUpdateAction commands = jda.updateCommands();
         commands.addCommands(
-                new CommandDataImpl("trpg", "즐거운 모험이 시작됩니다.")
-        );
-        commands.addCommands(
-                new CommandDataImpl("reset", "지금까지 했던 모든 모험들을 초기화합니다.")
-        );
-        commands.addCommands(
+                new CommandDataImpl("trpg", "즐거운 모험이 시작됩니다."),
+                new CommandDataImpl("reset", "지금까지 했던 모든 모험들을 초기화합니다."),
                 new CommandDataImpl("status","모든 모험가들이 이세계에 오면 처음 하는 말")
+                        .addOption(OptionType.USER, "유저명", "조금은 숙련된 모험가들이 이세계에서 가장 많이 하는 말", false)
         );
         commands.queue();
     }
