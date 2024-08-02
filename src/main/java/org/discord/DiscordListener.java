@@ -69,14 +69,15 @@ public class DiscordListener implements EventListener {
                             playerData.storyIndex++;
                             break;
                         case 2:
-                            if (playerData.job.equals(Job.NONE)) {
-                                e.reply("직업을 골라주세요!").setEphemeral(true).queue();
-                                return;
-                            }
-                            e.reply("Next_Story: 직업 고른 후 스토리").queue();
-                            playerData.storyIndex++;
+                            e.reply("직업을 골라주세요!").setEphemeral(true).queue();
                             break;
                         case 3:
+                            e.reply(
+                                    u.getName()+"은(는) "+playerData.job.name+"의 기억을 떠올렸다..\n" +
+                                            "하지만 과거의 일은 좀처럼 와닿지 않았다..\n"+"지끈 아파오는 머리를 뒤로하고"+u.getName()+"은(는) 앞으로 나아갑니다").queue();
+                            playerData.storyIndex++;
+                            break;
+                        case 4:
                             e.reply("Next_Story: 직업 고르고 진행 후 스토리").queue();
                             playerData.storyIndex++;
                             break;
@@ -121,6 +122,7 @@ public class DiscordListener implements EventListener {
                 playerData.job = Job.valueOf(e.getButton().getId().substring("jobSelection__".length() + e.getUser().getId().length()));
                 e.getChannel().sendMessage(e.getUser().getAsMention() + "님이 " + playerData.job.getName() + " 직업으로 전직했습니다!").queue();
                 e.getChannel().editMessageComponentsById(e.getMessageId()).queue();
+                playerData.storyIndex++;
             }
         } else if (event instanceof MessageReceivedEvent e) {
             if (Main.isBotOwner(e.getAuthor().getId())) {
