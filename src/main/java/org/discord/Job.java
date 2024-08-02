@@ -10,7 +10,7 @@ public enum Job {
     BERSERK("버서커", Emoji.fromUnicode("🔪"), Color.RED),
     MAGE("메이지", Emoji.fromUnicode("🪄"), Color.YELLOW),
     ASSASSIN("어쎄신", Emoji.fromUnicode("🥷"), Color.BLACK),
-    CHRIST("크리스트", Emoji.fromUnicode("✝️"), Color.GREEN);
+    PRIEST("프리스트", Emoji.fromUnicode("✝️"), Color.GREEN);
 
     public final String name;
     public final Emoji emoji;
