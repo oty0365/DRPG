@@ -8,8 +8,11 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.EventListener;
+import net.dv8tion.jda.api.interactions.components.ItemComponent;
+import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import net.dv8tion.jda.api.interactions.components.buttons.ButtonStyle;
 import net.dv8tion.jda.api.utils.FileUpload;
+import net.dv8tion.jda.api.utils.data.DataObject;
 import net.dv8tion.jda.internal.interactions.component.ButtonImpl;
 import org.jetbrains.annotations.NotNull;
 
@@ -19,6 +22,7 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 
 public class DiscordListener implements EventListener {
     public static HashMap<String, Data> data = new HashMap<>();
@@ -30,22 +34,45 @@ public class DiscordListener implements EventListener {
                 if (!data.getOrDefault(u.getId(), new Data()).hasPlayed) {
                     try {
                         e.replyFiles(FileUpload.fromData(new FileInputStream("startAdventure.png"), "image.png")).queue();
-                        e.getChannel().sendMessage("당신은 어두컴컴한 묘지에서 누군가의 가호를 받고 일어났습니다..").queue();
-                        e.getChannel().sendMessage("당신의 옷은 그을렸고 몸에는 신비로운 인장("+u.getName()+")이 박혀있는 듯 합니다.").queue();
-                        var messageAction = e.getChannel().sendMessage("하나를 고르시오");
-                        for (Job job : Arrays.stream(Job.values()).skip(1).toList()) messageAction.addActionRow(new ButtonImpl("jobSelection_" + u.getId() + "_" + job.toString(), job.getName(), ButtonStyle.SECONDARY, false, job.getEmoji()));
-                        messageAction.queue();
-
                     } catch (FileNotFoundException ex) {
                         e.reply("당신의 신비한 모험이 지금 시작됩니다").queue();
-                        e.getChannel().sendMessage("당신은 어두컴컴한 묘지에서 누군가의 가호를 받고 일어났습니다..").queue();
-                        e.getChannel().sendMessage("당신의 옷은 그을렸고 몸에는 신비로운 인장("+u.getName()+")이 박혀있는 듯 합니다.").queue();
                     }
+                    e.getChannel().sendMessage("당신은 어두컴컴한 묘지에서 누군가의 가호를 받고 일어났습니다..").queue();
+                    e.getChannel().sendMessage("당신의 옷은 그을렸고 몸에는 신비로운 인장("+u.getName()+")이 박혀있는 듯 합니다.").queue();
                     Data dat = data.getOrDefault(u.getId(), new Data());
                     dat.hasPlayed = true;
                     data.put(u.getId(), dat);
                 } else {
-                    e.reply("모험에 돌아오신 걸 환영합니다!").queue();
+                    Data playerData = data.get(u.getId());
+                    switch (playerData.storyIndex) {
+                        case 0:
+                            var messageAction = e.reply("다음 직업 중 하나로 전직할 수 있습니다.");
+                            List<Job> jobs = Arrays.stream(Job.values()).skip(1).toList();
+                            for (int i = 0; i < jobs.size(); i++) {
+                                List<Button> buttons = new ArrayList<>();
+                                for (int max = Math.min(i + 5, jobs.size()); i < max; i++) {
+                                    buttons.add(new ButtonImpl("jobSelection_" + u.getId() + "_" + jobs.get(i).toString(), jobs.get(i).getName(), ButtonStyle.SECONDARY, false, jobs.get(i).getEmoji()));
+                                }
+                                messageAction.addActionRow(buttons);
+                            }
+                            messageAction.queue();
+                            playerData.storyIndex++;
+                            break;
+                        case 1:
+                            if (playerData.job.equals(Job.NONE)) {
+                                e.reply("직업을 골라주세요!").setEphemeral(true).queue();
+                                return;
+                            }
+                            e.reply("Next_Story: 직업 고른 후 스토리").queue();
+                            playerData.storyIndex++;
+                            break;
+                        case 2:
+                            e.reply("Next_Story: 직업 고르고 진행 후 스토리").queue();
+                            playerData.storyIndex++;
+                            break;
+                        default:
+                            e.reply("모험에 돌아오신 걸 환영합니다!").queue();
+                    }
                 }
                 return;
             }
@@ -82,8 +109,8 @@ public class DiscordListener implements EventListener {
                     return;
                 }
                 playerData.job = Job.valueOf(e.getButton().getId().substring("jobSelection__".length() + e.getUser().getId().length()));
-                e.getChannel().deleteMessageById(e.getMessageId()).queue();
-                e.getChannel().sendMessage(e.getUser().getAsMention() + "님이 " + playerData.job.getName() + " 직업으로 전직했습니다!").setAllowedMentions(new ArrayList<>()).queue();
+                e.getChannel().editMessageById(e.getMessageId(), e.getUser().getAsMention() + "님이 " + playerData.job.getName() + " 직업으로 전직했습니다!").queue();
+                e.getChannel().editMessageComponentsById(e.getMessageId()).queue();
             }
         } else if (event instanceof MessageReceivedEvent e) {
             if (Main.isBotOwner(e.getAuthor().getId())) {
