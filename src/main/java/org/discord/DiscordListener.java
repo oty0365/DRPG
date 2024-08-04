@@ -192,17 +192,24 @@ public class DiscordListener implements EventListener {
                                         모든 원흉의 불들을 덮고 소멸시킬 어둠의 시대가 도래하기를 말이지 
                                         ```
                                         """).queue();
+                                playerData.storyIndex++;
+                                break;
                             case 16:
                                 messageAction = e.reply("""
                                         ```ansi
                                         [1;34m<노인>[0;37m
                                         사람들의 소망이 온 우주에 닿았던 것일까.. 기적이 일었났어
-                                        어느 한 
+                                        
+                                        어느 한 소년이 있었어
+                                        이름도 없고 소중한 사람도 없고 아무것도 없는 가녀린 소년은 노역소에서 죽어가고 있었어
+                                        그러던 어느날 소년은 목소리를 듣기 시작했어
+                                        목소리를 따라 어느 깊은 숲으로 향하니 그곳은 어둠밖에 없었어
+                                        어떤 존재가 와서 말을 걸었어 
                                         ```
                                         """);
-                                image = Main.class.getClassLoader().getResourceAsStream("DragonRule.png");
+                                image = Main.class.getClassLoader().getResourceAsStream("TheShadowKing1.png");
                                 if (image == null) {
-                                    messageAction.addContent("\n# 나이트 워커 - 밤길을 걷는 자 -\n\n용의 군주가 이끌던 군대의 막강한 이명가진 자들중 하나.\n밤에만 활동하며 지나가는 곳엔 항상 푸른 폭발이 잇따른다..");
+                                    messageAction.addContent("\n# 어둠의군주\n");
                                 } else {
                                     messageAction.addFiles(FileUpload.fromData(image, "image.png"));
                                 }
