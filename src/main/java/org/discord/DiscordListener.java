@@ -101,7 +101,8 @@ public class DiscordListener implements EventListener {
                             case 6:
                                 e.reply("""
                                     ```ansi
-                                    [1;34m???[0;37m: 거 누구인가..?
+                                    [1;34m<???>[0;37m
+                                    거 누구인가..?
                                     ```
                                     """).queue();
                                 playerData.storyIndex++;
@@ -124,8 +125,9 @@ public class DiscordListener implements EventListener {
                             case 9:
                                 e.reply("""
                                     ```ansi
-                                    [1;34m노인[0;37m: 또 다른 불멸자구나..
-                                         들어와서 차라도 한 잔 하지 않겠나?
+                                    [1;34m<노인>[0;37m
+                                    또 다른 불멸자구나..
+                                    들어와서 차라도 한 잔 하지 않겠나?
                                     ```
                                     """).queue();
                                 playerData.storyIndex++;
@@ -143,9 +145,68 @@ public class DiscordListener implements EventListener {
                             case 12:
                                 e.reply("""
                                         ```ansi
-                                        [1;34m노인[0;37m: Story_NextLine
+                                        [1;34m<노인>[0;37m
+                                        이 이야기는 아주 오래 전 이야기야..
+                                        세상이 아직 형체를 온전히 갖추기 전 세상은 평온한듯 보였단다.. 
                                         ```
                                         """).queue();
+                                playerData.storyIndex++;
+                                break;
+                            case 13:
+                                messageAction = e.reply("""
+                                        ```ansi
+                                        [1;34m<노인>[0;37m
+                                        용들이 나타자기 전까진 말이지..
+                                        그것들은 보이는 모든것을 불로 태웠고 세상은 재로 물들어 잿빛이 되었단다..
+                                        ```
+                                        """);
+                                image = Main.class.getClassLoader().getResourceAsStream("DragonRule.png");
+                                if (image == null) {
+                                    messageAction.addContent("\n# 나이트 워커 - 밤길을 걷는 자 -\n\n용의 군주가 이끌던 군대의 막강한 이명가진 자들중 하나.\n밤에만 활동하며 지나가는 곳엔 항상 푸른 폭발이 잇따른다..");
+                                } else {
+                                    messageAction.addFiles(FileUpload.fromData(image, "image.png"));
+                                }
+                                messageAction.queue();
+                                playerData.storyIndex++;
+                                break;
+                            case 14:
+                                e.reply("""
+                                        ```ansi
+                                        [1;34m<노인>[0;37m
+                                        그렇게 용들의 통치는 수백년간 이어졌고 
+                                        피지배자들은 고통받았지..
+                                        아주 오랜 세월동안 말이야
+                                        ```
+                                        """).queue();
+                                playerData.storyIndex++;
+                                break;
+                            case 15:
+                                e.reply("""
+                                        ```ansi
+                                        [1;34m<노인>[0;37m
+                                        모든것을 집어삼키며 꺼지지 않고 심지어는 신조차도 잡아먹는 백염을 용들의 군주는 숭배했었어
+                                        그래서 그는 피지배자들에게 백염의 신인 '뱀들의 어머니'를 믿도록 강요했지..
+                                        피지배자들은 용들이 두려워서라도 '뱀들의 어머니'를 믿어야 했단다
+                                        
+                                        하지만 그들의 마음속엔 한가지 강한 소망이 자리잡아 있었어
+                                        모든 원흉의 불들을 덮고 소멸시킬 어둠의 시대가 도래하기를 말이지 
+                                        ```
+                                        """).queue();
+                            case 16:
+                                messageAction = e.reply("""
+                                        ```ansi
+                                        [1;34m<노인>[0;37m
+                                        사람들의 소망이 온 우주에 닿았던 것일까.. 기적이 일었났어
+                                        어느 한 
+                                        ```
+                                        """);
+                                image = Main.class.getClassLoader().getResourceAsStream("DragonRule.png");
+                                if (image == null) {
+                                    messageAction.addContent("\n# 나이트 워커 - 밤길을 걷는 자 -\n\n용의 군주가 이끌던 군대의 막강한 이명가진 자들중 하나.\n밤에만 활동하며 지나가는 곳엔 항상 푸른 폭발이 잇따른다..");
+                                } else {
+                                    messageAction.addFiles(FileUpload.fromData(image, "image.png"));
+                                }
+                                messageAction.queue();
                                 playerData.storyIndex++;
                                 break;
                             default:
@@ -208,17 +269,22 @@ public class DiscordListener implements EventListener {
                         e.reply(STR."""
                                 당신은 노인과 차를 마시며 대화하기로 했습니다.
                                 차를 마시는 순간 이전의 기억이 돌아올 듯 말듯 하며 머리가 아파옵니다.
+
+                                **
+
                                 하지만 그 순간 번뜩이는 영감속에서 당신은 깨닳습니다..
                                 \{playerData.job.getName()}의 기억의 일부를 말이죠
                                 머리가 시원해지며 당신은 한층 강해집니다..
+
                                 레벨이 1 상승했습니다.
                                 """).addActionRow(getStatPointUseButtons(e.getUser())).queue();
                     } else {
                         e.reply("""
                                 당신은 노인과 밖에서 대화하기로 했습니다.
                                 ```ansi
-                                [1;34m노인[0;37m: 아.. 아쉽구나 그러면 
-                                     집 앞에서 이야기하는게 좋겠네
+                                [1;34m<노인>[0;37m
+                                아.. 아쉽구나 그러면 
+                                집 앞에서 이야기하는게 좋겠네
                                 ```
                                 """).queue();
                         playerData.storyIndex++;
@@ -258,6 +324,12 @@ public class DiscordListener implements EventListener {
                         FileUtils.saveData(data);
                         e.getMessage().addReaction(Emoji.fromUnicode("✅")).queue();
                         e.getJDA().shutdown();
+                    }
+                    if (e.getMessage().getContentRaw().startsWith("!스토리진행도 ")) {
+                        int index = Integer.parseInt(e.getMessage().getContentRaw().substring("!스토리진행도 ".length()));
+                        Data playerData = data.get(e.getAuthor().getId());
+                        playerData.storyIndex = index;
+                        e.getMessage().addReaction(Emoji.fromUnicode("✅")).queue();
                     }
                 }
             }
