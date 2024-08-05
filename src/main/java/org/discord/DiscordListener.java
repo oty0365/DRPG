@@ -216,6 +216,40 @@ public class DiscordListener implements EventListener {
                                 messageAction.queue();
                                 playerData.storyIndex++;
                                 break;
+                            case 17:
+                                e.reply("""
+                                        ```ansi
+                                        [1;31m<???>[0;37m
+                                        세상을 바로잡고 싶은가..?
+                                        ```
+                                        """).queue();
+                                playerData.storyIndex++;
+                                break;
+                            case 18:
+                                e.reply("""
+                                        ```ansi
+                                        [1;34m<노인>[0;37m
+                                        소년은 얼빠진 표정으로 고개를 끄덕였고 결국 그 존재와 하나되어 용 사냥에 나섰어 ..
+                                        ```
+                                        """).queue();
+                                playerData.storyIndex++;
+                                break;
+                            case 19:
+                                e.reply("""
+                                        ```ansi
+                                        [1;34m<노인>[0;37m
+                                        용을 잡기란 쉽지 않았단다
+                                        그들의 강력한 피부와 숨결 그리고 지성과 마력을 한 작은 인간의 몸으로 돌파하긴 너무 벅찼지..
+                                        
+                                        첫 용을 잡는데에는 거의 한달이 걸렸어
+                                        하지만 이내 곧 소년은 방법을 찾아냈지
+                                        용의 절단부분은 재생이 되는데 이걸 어둠을 부여한 무기로 재생을 덮는거야..
+                                        그렇게 소년은 영웅이되었어
+                                        모든 사람들의 소망을 실현시켜줄 영웅이..
+                                        ```
+                                        """).queue();
+                                playerData.storyIndex++;
+                                break;
                             default:
                                 e.reply("당신은 잠에서 깨어나 묵묵히 길을 나섭니다").queue();
                         }
