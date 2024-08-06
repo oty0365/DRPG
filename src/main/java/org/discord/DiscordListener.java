@@ -193,27 +193,66 @@ public class DiscordListener implements EventListener {
                                         모든 원흉의 불들을 덮고 소멸시킬 어둠의 시대가 도래하기를 말이지
                                         ```
                                         """).queue();
+                                playerData.storyIndex++;
+                                break;
                             case 16:
                                 messageAction = e.reply("""
                                         ```ansi
                                         [1;34m<노인>[0;37m
                                         사람들의 소망이 온 우주에 닿았던 것일까.. 기적이 일었났어
-                                        어느 한 
+                                        
+                                        어느 한 소년이 있었어
+                                        이름도 없고 소중한 사람도 없고 아무것도 없는 가녀린 소년은 노역소에서 죽어가고 있었어
+                                        그러던 어느날 소년은 목소리를 듣기 시작했어
+                                        목소리를 따라 어느 깊은 숲으로 향하니 그곳은 어둠밖에 없었어
+                                        어떤 존재가 와서 말을 걸었어 
                                         ```
                                         """);
-                                image = Main.class.getClassLoader().getResourceAsStream("DragonRule.png");
+                                image = Main.class.getClassLoader().getResourceAsStream("TheShadowKing1.png");
                                 if (image == null) {
                                     messageAction.addContent("""
 
-                                            # 나이트 워커 - 밤길을 걷는 자 -
+                                            # 어둠의군주
 
-                                            용의 군주가 이끌던 군대의 막강한 이명가진 자들중 하나.
-                                            밤에만 활동하며 지나가는 곳엔 항상 푸른 폭발이 잇따른다..
                                             """);
                                 } else {
                                     messageAction.addFiles(FileUpload.fromData(image, "image.png"));
                                 }
                                 messageAction.queue();
+                                playerData.storyIndex++;
+                                break;
+                            case 17:
+                                e.reply("""
+                                        ```ansi
+                                        [1;31m<???>[0;37m
+                                        세상을 바로잡고 싶은가..?
+                                        ```
+                                        """).queue();
+                                playerData.storyIndex++;
+                                break;
+                            case 18:
+                                e.reply("""
+                                        ```ansi
+                                        [1;34m<노인>[0;37m
+                                        소년은 얼빠진 표정으로 고개를 끄덕였고 결국 그 존재와 하나되어 용 사냥에 나섰어 ..
+                                        ```
+                                        """).queue();
+                                playerData.storyIndex++;
+                                break;
+                            case 19:
+                                e.reply("""
+                                        ```ansi
+                                        [1;34m<노인>[0;37m
+                                        용을 잡기란 쉽지 않았단다
+                                        그들의 강력한 피부와 숨결 그리고 지성과 마력을 한 작은 인간의 몸으로 돌파하긴 너무 벅찼지..
+                                        
+                                        첫 용을 잡는데에는 거의 한달이 걸렸어
+                                        하지만 이내 곧 소년은 방법을 찾아냈지
+                                        용의 절단부분은 재생이 되는데 이걸 어둠을 부여한 무기로 재생을 덮는거야..
+                                        그렇게 소년은 영웅이되었어
+                                        모든 사람들의 소망을 실현시켜줄 영웅이..
+                                        ```
+                                        """).queue();
                                 playerData.storyIndex++;
                                 break;
                             default:
