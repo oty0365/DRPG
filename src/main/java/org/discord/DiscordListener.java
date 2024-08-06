@@ -406,7 +406,7 @@ public class DiscordListener implements EventListener {
     }
 
     public static List<Button> getStatPointUseButtons(User u, BigInteger level) {
-        level = level.min(new BigInteger("999999999999999999999999999999999999999999999999999999999999999999999"));
+        level = level.min(new BigInteger("9".repeat(69)));
         return new ArrayList<>(List.of(
                 new ButtonImpl(STR."statup_\{u.getId()}_hp_\{level}", "체력", ButtonStyle.SECONDARY, false, null),
                 new ButtonImpl(STR."statup_\{u.getId()}_atk_\{level}", "공격력", ButtonStyle.SECONDARY, false, null),
