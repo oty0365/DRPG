@@ -2,6 +2,7 @@ package org.discord;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.math.BigInteger;
 
 public class Data implements Serializable {
     @Serial
@@ -10,12 +11,12 @@ public class Data implements Serializable {
     public Job job = Job.NONE;
     public int storyIndex = 0;
 
-    public int level = 1;
+    public BigInteger level = BigInteger.ONE;
 
-    public int hp = 5;
-    public int atk = 2;
-    public int def = 1;
-    public int dex = 2;
-    public int luck = 0;
-    public int currentHp = 5;
+    public BigInteger hp = new BigInteger("5");
+    public BigInteger atk = BigInteger.TWO;
+    public BigInteger def = BigInteger.ONE;
+    public BigInteger dex = BigInteger.TWO;
+    public BigInteger luck = BigInteger.ZERO;
+    public BigInteger currentHp = new BigInteger("5");
 }

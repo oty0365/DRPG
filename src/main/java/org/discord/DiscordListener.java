@@ -17,6 +17,7 @@ import net.dv8tion.jda.internal.interactions.component.ButtonImpl;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.InputStream;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -147,7 +148,7 @@ public class DiscordListener implements EventListener {
                                         ```ansi
                                         [1;34m<노인>[0;37m
                                         이 이야기는 아주 오래 전 이야기야..
-                                        세상이 아직 형체를 온전히 갖추기 전 세상은 평온한듯 보였단다.. 
+                                        세상이 아직 형체를 온전히 갖추기 전 세상은 평온한듯 보였단다..
                                         ```
                                         """).queue();
                                 playerData.storyIndex++;
@@ -173,7 +174,7 @@ public class DiscordListener implements EventListener {
                                 e.reply("""
                                         ```ansi
                                         [1;34m<노인>[0;37m
-                                        그렇게 용들의 통치는 수백년간 이어졌고 
+                                        그렇게 용들의 통치는 수백년간 이어졌고
                                         피지배자들은 고통받았지..
                                         아주 오랜 세월동안 말이야
                                         ```
@@ -189,7 +190,7 @@ public class DiscordListener implements EventListener {
                                         피지배자들은 용들이 두려워서라도 '뱀들의 어머니'를 믿어야 했단다
                                         
                                         하지만 그들의 마음속엔 한가지 강한 소망이 자리잡아 있었어
-                                        모든 원흉의 불들을 덮고 소멸시킬 어둠의 시대가 도래하기를 말이지 
+                                        모든 원흉의 불들을 덮고 소멸시킬 어둠의 시대가 도래하기를 말이지
                                         ```
                                         """).queue();
                                 playerData.storyIndex++;
@@ -209,7 +210,11 @@ public class DiscordListener implements EventListener {
                                         """);
                                 image = Main.class.getClassLoader().getResourceAsStream("TheShadowKing1.png");
                                 if (image == null) {
-                                    messageAction.addContent("\n# 어둠의군주\n");
+                                    messageAction.addContent("""
+
+                                            # 어둠의군주
+
+                                            """);
                                 } else {
                                     messageAction.addFiles(FileUpload.fromData(image, "image.png"));
                                 }
@@ -269,7 +274,8 @@ public class DiscordListener implements EventListener {
                         e.reply("아직 플레이 기록이 없습니다!").queue();
                         return;
                     }
-                    e.replyEmbeds(new EmbedBuilder().setAuthor(STR."Lv.\{playerData.level} \{u.getName()} [\{playerData.job.getEmoji().getFormatted()} \{playerData.job.getName()}]", null, u.getEffectiveAvatarUrl()).setColor(playerData.job.getPersonalColor())
+                    String levelText = playerData.level.compareTo(new BigInteger("9".repeat(199))) > 0 ? STR."\{"9".repeat(198)}+" : playerData.level.toString();
+                    e.replyEmbeds(new EmbedBuilder().setAuthor(STR."Lv.\{levelText} \{u.getName()} [\{playerData.job.getEmoji().getFormatted()} \{playerData.job.getName()}]", null, u.getEffectiveAvatarUrl()).setColor(playerData.job.getPersonalColor())
                             .setDescription(STR."""
                             <스텟>
                             체력 : \{playerData.currentHp} / \{playerData.hp}
@@ -306,7 +312,7 @@ public class DiscordListener implements EventListener {
                 }
                 if (e.getButton().getId().startsWith(STR."teaSelection_\{e.getUser().getId()}_")) {
                     if (e.getButton().getId().substring("teaSelection__".length() + e.getUser().getId().length()).equals("acceptTea")) {
-                        playerData.level++;
+                        playerData.level = playerData.level.add(BigInteger.ONE);
                         e.reply(STR."""
                                 당신은 노인과 차를 마시며 대화하기로 했습니다.
                                 차를 마시는 순간 이전의 기억이 돌아올 듯 말듯 하며 머리가 아파옵니다.
@@ -324,7 +330,7 @@ public class DiscordListener implements EventListener {
                                 당신은 노인과 밖에서 대화하기로 했습니다.
                                 ```ansi
                                 [1;34m<노인>[0;37m
-                                아.. 아쉽구나 그러면 
+                                아.. 아쉽구나 그러면
                                 집 앞에서 이야기하는게 좋겠네
                                 ```
                                 """).queue();
@@ -334,27 +340,28 @@ public class DiscordListener implements EventListener {
                     return;
                 }
                 if (e.getButton().getId().startsWith(STR."statup_\{e.getUser().getId()}_")) {
-                    String selectedStat = e.getButton().getId().substring("statUp__".length() + e.getUser().getId().length());
-                    switch (selectedStat) {
+                    String[] selectedStat = e.getButton().getId().substring("statUp__".length() + e.getUser().getId().length()).split("_");
+                    BigInteger point = new BigInteger(selectedStat[1]);
+                    switch (selectedStat[0]) {
                         case "hp":
-                            playerData.hp += 2;
-                            playerData.currentHp += 2;
+                            playerData.hp = playerData.hp.add(point);
+                            playerData.currentHp = playerData.currentHp.add(point);
                             break;
                         case "atk":
-                            playerData.atk += 2;
+                            playerData.atk = playerData.atk.add(point);
                             break;
                         case "def":
-                            playerData.def += 2;
+                            playerData.def = playerData.def.add(point);
                             break;
                         case "dex":
-                            playerData.dex += 2;
+                            playerData.dex = playerData.dex.add(point);
                             break;
                         case "luck":
-                            playerData.luck += 2;
+                            playerData.luck = playerData.luck.add(point);
                             break;
                         default:
                     }
-                    e.reply(STR."\{e.getButton().getLabel()} 스텟이 2 상승했습니다.").queue();
+                    e.reply(STR."\{e.getButton().getLabel()} 스텟이 \{point} 상승했습니다.").queue();
                     e.getChannel().editMessageComponentsById(e.getMessageId()).queue();
                     playerData.storyIndex++;
                 }
@@ -372,6 +379,21 @@ public class DiscordListener implements EventListener {
                         playerData.storyIndex = index;
                         e.getMessage().addReaction(Emoji.fromUnicode("✅")).queue();
                     }
+                    if (e.getMessage().getContentRaw().startsWith("!레벨 ")) {
+                        BigInteger level = new BigInteger(e.getMessage().getContentRaw().substring("!레벨 ".length()));
+                        Data playerData = data.get(e.getAuthor().getId());
+                        playerData.level = level;
+                        e.getMessage().addReaction(Emoji.fromUnicode("✅")).queue();
+                    }
+                    if (e.getMessage().getContentRaw().startsWith("!스탯 ")) {
+                        BigInteger point = new BigInteger(e.getMessage().getContentRaw().substring("!스탯 ".length()));
+                        e.getMessage().reply("올릴 스탯을 정해주세요.").addActionRow(getStatPointUseButtons(e.getAuthor(), point)).queue();
+                        e.getMessage().addReaction(Emoji.fromUnicode("✅")).queue();
+                    }
+                    if (e.getMessage().getContentRaw().equals("!스탯")) {
+                        e.getMessage().reply("올릴 스탯을 정해주세요.").addActionRow(getStatPointUseButtons(e.getAuthor())).queue();
+                        e.getMessage().addReaction(Emoji.fromUnicode("✅")).queue();
+                    }
                 }
             }
             default -> {
@@ -380,12 +402,17 @@ public class DiscordListener implements EventListener {
     }
 
     public static List<Button> getStatPointUseButtons(User u) {
+        return getStatPointUseButtons(u, BigInteger.TWO);
+    }
+
+    public static List<Button> getStatPointUseButtons(User u, BigInteger level) {
+        level = level.min(new BigInteger("9".repeat(69)));
         return new ArrayList<>(List.of(
-                new ButtonImpl(STR."statup_\{u.getId()}_hp", "체력", ButtonStyle.SECONDARY, false, null),
-                new ButtonImpl(STR."statup_\{u.getId()}_atk", "공격력", ButtonStyle.SECONDARY, false, null),
-                new ButtonImpl(STR."statup_\{u.getId()}_def", "방어력", ButtonStyle.SECONDARY, false, null),
-                new ButtonImpl(STR."statup_\{u.getId()}_dex", "민첩", ButtonStyle.SECONDARY, false, null),
-                new ButtonImpl(STR."statup_\{u.getId()}_luck", "운", ButtonStyle.SECONDARY, false, null)
+                new ButtonImpl(STR."statup_\{u.getId()}_hp_\{level}", "체력", ButtonStyle.SECONDARY, false, null),
+                new ButtonImpl(STR."statup_\{u.getId()}_atk_\{level}", "공격력", ButtonStyle.SECONDARY, false, null),
+                new ButtonImpl(STR."statup_\{u.getId()}_def_\{level}", "방어력", ButtonStyle.SECONDARY, false, null),
+                new ButtonImpl(STR."statup_\{u.getId()}_dex_\{level}", "민첩", ButtonStyle.SECONDARY, false, null),
+                new ButtonImpl(STR."statup_\{u.getId()}_luck_\{level}", "운", ButtonStyle.SECONDARY, false, null)
         ));
     }
 }

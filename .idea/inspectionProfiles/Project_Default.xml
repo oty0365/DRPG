@@ -8,5 +8,6 @@
       <option name="processComments" value="true" />
     </inspection_tool>
     <inspection_tool class="TrailingWhitespacesInTextBlock" enabled="false" level="WARNING" enabled_by_default="false" />
+    <inspection_tool class="PreviewFeature" enabled="false" level="WARNING" enabled_by_default="false" />
   </profile>
 </component>
