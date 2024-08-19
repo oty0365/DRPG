@@ -1,6 +1,5 @@
 package org.discord;
 
-import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -21,10 +20,10 @@ public class FileUtils {
             return "";
         }
     }
-    public static void saveData(HashMap<String, Data> data) {
+    public static void saveData(HashMap<String, PlayerData> data) {
         try {
             JsonObject o = new JsonObject();
-            for (Map.Entry<String, Data> entry : data.entrySet()) {
+            for (Map.Entry<String, PlayerData> entry : data.entrySet()) {
                 o.addProperty(entry.getKey(), serialObject(entry.getValue()));
             }
             Files.writeString(Path.of("saveData.dat"), o.toString());
@@ -32,12 +31,13 @@ public class FileUtils {
             e.printStackTrace(System.err);
         }
     }
-    public static HashMap<String, Data> loadData() {
+    public static HashMap<String, PlayerData> loadData() {
         try {
-            HashMap<String, Data> result = new HashMap<>();
-            JsonObject data = new JsonParser().parse(Files.readString(Path.of("saveData.dat"))).getAsJsonObject();
+            HashMap<String, PlayerData> result = new HashMap<>();
+
+            JsonObject data = JsonParser.parseString(Files.readString(Path.of("saveData.dat"))).getAsJsonObject();
             for (Map.Entry<String, JsonElement> entry : data.entrySet()) {
-                result.put(entry.getKey(), deSerialObject(entry.getValue().getAsString(), Data.class));
+                result.put(entry.getKey(), deSerialObject(entry.getValue().getAsString(), PlayerData.class));
             }
             return result;
         } catch (IOException | ClassNotFoundException e) {
@@ -46,7 +46,8 @@ public class FileUtils {
         }
     }
 
-    public static <T extends Serializable> T deSerialObject(String data, Class<T> clazz) throws IOException, ClassNotFoundException {
+    @SuppressWarnings("unchecked")
+    public static <T extends Serializable> T deSerialObject(String data, Class<T> ignoredClazz) throws IOException, ClassNotFoundException {
         ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(Base64.getDecoder().decode(data)));
         return (T) ois.readObject();
     }
