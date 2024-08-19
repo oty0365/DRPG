@@ -134,7 +134,7 @@ public class DiscordListener implements EventListener {
                                 playerData.storyIndex++;
                                 break;
                             case 10:
-                                e.reply("노인이 당신에게 차를 권합니다.. 차를 마시게습니까?").addActionRow(
+                                e.reply("노인이 당신에게 차를 권합니다.. 차를 마시겠습니까?").addActionRow(
                                         new ButtonImpl(STR."teaSelection_\{u.getId()}_acceptTea", "차를 마신다", ButtonStyle.SECONDARY, false, Emoji.fromUnicode("\uD83C\uDF75")),
                                         new ButtonImpl(STR."teaSelection_\{u.getId()}_talkOutside", "밖에서 이야기한다", ButtonStyle.SECONDARY, false, Emoji.fromUnicode("\uD83C\uDFE0"))
                                 ).queue();
@@ -199,7 +199,7 @@ public class DiscordListener implements EventListener {
                                 messageAction = e.reply("""
                                         ```ansi
                                         [1;34m<노인>[0;37m
-                                        사람들의 소망이 온 우주에 닿았던 것일까.. 기적이 일었났어
+                                        사람들의 소망이 온 우주에 닿았던 것일까.. 기적이 일어났어
                                         
                                         어느 한 소년이 있었어
                                         이름도 없고 소중한 사람도 없고 아무것도 없는 가녀린 소년은 노역소에서 죽어가고 있었어
