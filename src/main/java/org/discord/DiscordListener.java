@@ -377,7 +377,7 @@ public class DiscordListener implements EventListener {
                     MobData mob = getMobByUUID(UUID.fromString(decide[1]));
                     switch (decide[0]) {
                         case "attack":
-                            mob.applyAction(STR."damage-\{playerData.atk}");
+                            mob.applyAction(STR."damage-\{playerData.atk}", playerData);
                             if (!mob.isAlive()) {
                                 e.reply(STR."당신의 공격!\n\{mob.name}(이)가 쓰러졌다!\n레벨이 1 올랐습니다.").addActionRow(getStatPointUseButtons(u)).queue();
                                 break;
@@ -389,19 +389,23 @@ public class DiscordListener implements EventListener {
                             e.reply("방어 태세 돌입!").addActionRow(getCombatProcessButtons(u, mob, true)).queue();
                             break;
                         case "process":
+                            ReplyCallbackAction action;
                             if (mob.nextAction().startsWith("skill-")) {
-                                mob.applyAction(mob.getNextSkill().getValue());
-                                e.reply(STR."""
+                                mob.applyAction(mob.getNextSkill().getValue(), playerData);
+                                action = e.reply(STR."""
                                 \{mob.name}의 스킬 - \{mob.removeNextAction().substring("skill-".length())}!
                                 효과가 적용되었다.
-                                """).addEmbeds(getMobInfoEmbed(mob).build()).addActionRow(getCombatProcessButtons(u, mob, false)).queue();
+                                """).addEmbeds(getMobInfoEmbed(mob).build()).addActionRow(getCombatProcessButtons(u, mob, false));
                             } else {
                                 BigInteger applyDamage = mob.damage;
                                 if (mob.opponentGuarding) applyDamage = applyDamage.subtract(playerData.def);
+                                mob.applyAction(STR."attack-\{applyDamage}", playerData);
                                 playerData.currentHp = playerData.currentHp.subtract(applyDamage);
                                 mob.removeNextAction();
-                                e.reply(STR."\{mob.name}의 공격!\nhp \{applyDamage.negate()}").addActionRow(getCombatProcessButtons(u, mob, false)).queue();
+                                action = e.reply(STR."\{mob.name}의 공격!\nhp \{applyDamage.negate()}").addEmbeds(getMobInfoEmbed(mob).build()).addActionRow(getCombatProcessButtons(u, mob, false));
                             }
+                            if (!playerData.isAlive()) action.setComponents().addContent("\n당신은 사망하셨습니다.");
+                            action.queue();
                             mob.opponentGuarding = false;
                             break;
                         default:
@@ -441,8 +445,8 @@ public class DiscordListener implements EventListener {
                     }
                     if (e.getMessage().getContentRaw().equals("!몹테스트")) {
                         MobData mob = new MobData("슬라임", "기초적인 잡몹", new BigInteger("5"), new BigInteger("5"), new BigInteger("1"),
-                                Map.entry("1|스킬명", "attack-0"),
-                                Map.entry("4|찰박거리기", "heal-0")
+                                Map.entry("1|포식", "attack-0"),
+                                Map.entry("4|찰박거리기", "heal-2")
                         );
                         e.getMessage().reply("몬스터가 출현했습니다!").addEmbeds(getMobInfoEmbed(mob).build()).addActionRow(getCombatAcceptButtons(u, mob)).queue();
                         e.getMessage().addReaction(Emoji.fromUnicode("✅")).queue();

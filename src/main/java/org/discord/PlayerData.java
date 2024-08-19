@@ -19,4 +19,8 @@ public class PlayerData implements Serializable {
     public BigInteger dex = BigInteger.TWO;
     public BigInteger luck = BigInteger.ZERO;
     public BigInteger currentHp = new BigInteger("5");
+
+    public boolean isAlive() {
+        return currentHp.compareTo(BigInteger.ZERO) > 0;
+    }
 }

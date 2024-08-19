@@ -39,12 +39,14 @@ public class MobData {
         return action;
     }
 
-    public void applyAction(String action) {
+    public void applyAction(String action, PlayerData player) {
         if (action.startsWith("damage-")) {
             currentHp = currentHp.subtract(new BigInteger(action.substring("damage-".length())));
             if (currentHp.compareTo(BigInteger.ZERO) <= 0) DiscordListener.unRegisterMob(uuid);
         } else if (action.startsWith("heal-"))
             currentHp = currentHp.add(new BigInteger(action.substring("heal-".length()))).min(maxHp);
+        else if (action.startsWith("attack-"))
+            player.currentHp = player.currentHp.subtract(new BigInteger(action.substring("attack-".length())));
     }
 
     public MobData destroy() {
