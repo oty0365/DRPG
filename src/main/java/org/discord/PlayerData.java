@@ -4,7 +4,7 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.math.BigInteger;
 
-public class Data implements Serializable {
+public class PlayerData implements Serializable {
     @Serial
     private static final long serialVersionUID = 0L;
     public boolean hasPlayed = false;
