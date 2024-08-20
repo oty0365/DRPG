@@ -12,8 +12,10 @@ import net.dv8tion.jda.internal.interactions.CommandDataImpl;
 
 public class Main {
     public static JDA jda;
-    public static void main(String[] args) {
+    @SuppressWarnings("ResultOfMethodCallIgnored")
+    public static void main(String[] ignoredArgs) {
         DiscordListener.data = FileUtils.loadData();
+        DiscordListener.script = FileUtils.loadScript();
         JDABuilder builder = JDABuilder.createDefault(FileUtils.readToken());
         builder.setAutoReconnect(true);
         builder.setMemberCachePolicy(MemberCachePolicy.ALL);

@@ -13,11 +13,12 @@ import java.util.Arrays;
 import java.util.stream.Collectors;
 
 public class ScriptProcesser {
+    @SuppressWarnings("ResultOfMethodCallIgnored")
     public static void accept(String script, SlashCommandInteractionEvent e, User u) {
         PlayerData playerData = DiscordListener.data.get(u.getId());
         script = convertLitheral(script, u);
         String[] actions = Arrays.stream(script.split("⇒")).map(String::strip).toArray(String[]::new);
-        ReplyCallbackAction action = getReplyMessage(actions[0], e.reply(""), u);
+        ReplyCallbackAction action = getReplyMessage(actions[0], e.reply(""));
         for (int i = 1; i < actions.length; i++) {
             String singleAction = actions[i];
             if (singleAction.startsWith("Actions")) {
@@ -58,11 +59,12 @@ public class ScriptProcesser {
                     }
                 }
             } else if (singleAction.equals("story++")) playerData.storyIndex++;
+            else if (singleAction.equals("Ephemeral")) action.setEphemeral(true);
         }
         action.queue();
     }
 
-    private static ReplyCallbackAction getReplyMessage(String message, ReplyCallbackAction action, User u) {
+    private static ReplyCallbackAction getReplyMessage(String message, ReplyCallbackAction action) {
         while (message.contains("[images/")) {
             action.addContent(message.substring(0, message.indexOf("[images/")));
             message = message.substring(message.indexOf("[images/") + 1);
@@ -78,10 +80,11 @@ public class ScriptProcesser {
         return action;
     }
 
-    public static String convertLitheral(String text, User u) {
+    private static String convertLitheral(String text, User u) {
         PlayerData playerData = DiscordListener.data.get(u.getId());
         return text
-                .replace("{user.name}", u.getName())
-                .replace("{user.job.name}", playerData.job.getName());
+                .replace("{user.name}", u.getEffectiveName())
+                .replace("{user.job.name}", playerData.job.getName())
+                .replace("{user.id}", u.getId());
     }
 }
