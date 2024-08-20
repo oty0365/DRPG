@@ -23,6 +23,8 @@ import java.util.*;
 public class DiscordListener implements EventListener {
     public static HashMap<String, PlayerData> data = new HashMap<>();
     public static HashMap<UUID, MobData> mobs = new HashMap<>();
+    public static Set<String> isCombating = new HashSet<>();
+    public static List<String> script;
     @Override
     public void onEvent(@NotNull GenericEvent event) {
         switch (event) {
@@ -30,7 +32,7 @@ public class DiscordListener implements EventListener {
                 User u = e.getUser();
                 if (e.getName().equals("trpg")) {
                     if (!data.getOrDefault(u.getId(), new PlayerData()).hasPlayed) {
-                        InputStream image = Main.class.getClassLoader().getResourceAsStream("startAdventure.png");
+                        InputStream image = Main.class.getClassLoader().getResourceAsStream("images/startAdventure.png");
                         if (image == null) {
                             e.reply("당신의 신비한 모험이 지금 시작됩니다").queue();
                         } else {
@@ -40,6 +42,10 @@ public class DiscordListener implements EventListener {
                         dat.hasPlayed = true;
                         data.put(u.getId(), dat);
                     } else {
+                        if (isCombating.contains(u.getId())) {
+                            e.reply("싸우는 중에는 스토리를 진행할 수 없습니다!").queue();
+                            return;
+                        }
                         PlayerData playerData = data.get(u.getId());
                         ReplyCallbackAction messageAction;
                         InputStream image;
@@ -51,23 +57,14 @@ public class DiscordListener implements EventListener {
                                 """).queue();
                             case 1:
                                 messageAction = e.reply("눈을 희미하게 뜬 당신은 수많은 과거의 기억들을 떠올립니다..");
-                                image = Main.class.getClassLoader().getResourceAsStream("Ep1SelectionTime.png");
+                                image = Main.class.getClassLoader().getResourceAsStream("images/Ep1SelectionTime.png");
                                 if (image == null) {
                                     messageAction.addContent("\n# Ep1.선택의 시간\n과거의 기억들 중 하나를 선택하세요");
                                 } else {
                                     messageAction.addFiles(FileUpload.fromData(image, "image.png"));
                                     messageAction.addContent("\n과거의 기억들 중 하나를 선택하세요");
                                 }
-                                List<Job> jobs = Arrays.stream(Job.values()).skip(1).toList();
-                                for (int i = 0; i < jobs.size(); i++) {
-                                    List<Button> buttons = new ArrayList<>();
-                                    for (int max = Math.min(i + 5, jobs.size()); i < max; i++) {
-                                        buttons.add(new ButtonImpl(STR."jobSelection_\{u.getId()}_\{jobs.get(i).toString()}", jobs.get(i).getName(), ButtonStyle.SECONDARY, false, jobs.get(i).getEmoji()));
-                                    }
-                                    messageAction.addActionRow(buttons);
-                                }
-
-                                messageAction.queue();
+                                messageAction.addActionRow(getJobButtons(u)).queue();
                                 playerData.storyIndex++;
                                 break;
                             case 2:
@@ -83,12 +80,12 @@ public class DiscordListener implements EventListener {
                                 break;
                             case 4:
                                 messageAction = e.reply("여러 묘지를 지난 당신은 그 가운데에 덩그러니 놓여있는 한 허름한 집을 보았습니다.");
-                                image = Main.class.getClassLoader().getResourceAsStream("Ep2TheHouseKeeper.png");
+                                image = Main.class.getClassLoader().getResourceAsStream("images/Ep2TheHouseKeeper.png");
                                 if (image == null) {
-                                    messageAction.addContent("\n# Ep2.무덤지기의 집\n허름해 보이는 집에는 아무도 살지 안을 것 같습니다..");
+                                    messageAction.addContent("\n# Ep2.무덤지기의 집\n허름해 보이는 집에는 아무도 살지 않을 것 같습니다..");
                                 } else {
                                     messageAction.addFiles(FileUpload.fromData(image, "image.png"));
-                                    messageAction.addContent("\n허름해 보이는 집에는 아무도 살지 안을 것 같습니다..");
+                                    messageAction.addContent("\n허름해 보이는 집에는 아무도 살지 않을 것 같습니다..");
                                 }
                                 messageAction.queue();
                                 playerData.storyIndex++;
@@ -112,7 +109,7 @@ public class DiscordListener implements EventListener {
                                 break;
                             case 8:
                                 messageAction = e.reply("인자하고 범접할 수 없는 아우라를 풍기는 노인이 당신 앞에 섭니다..");
-                                image = Main.class.getClassLoader().getResourceAsStream("TheOldMan.png");
+                                image = Main.class.getClassLoader().getResourceAsStream("images/TheOldMan.png");
                                 if (image == null) {
                                     messageAction.addContent("\n# 노인");
                                 } else {
@@ -159,7 +156,7 @@ public class DiscordListener implements EventListener {
                                         그것들은 보이는 모든것을 불로 태웠고 세상은 재로 물들어 잿빛이 되었단다..
                                         ```
                                         """);
-                                image = Main.class.getClassLoader().getResourceAsStream("DragonRule.png");
+                                image = Main.class.getClassLoader().getResourceAsStream("images/DragonRule.png");
                                 if (image == null) {
                                     messageAction.addContent("\n# 나이트 워커 - 밤길을 걷는 자 -\n\n용의 군주가 이끌던 군대의 막강한 이명가진 자들중 하나.\n밤에만 활동하며 지나가는 곳엔 항상 푸른 폭발이 잇따른다..");
                                 } else {
@@ -206,13 +203,9 @@ public class DiscordListener implements EventListener {
                                         어떤 존재가 와서 말을 걸었어 
                                         ```
                                         """);
-                                image = Main.class.getClassLoader().getResourceAsStream("TheShadowKing1.png");
+                                image = Main.class.getClassLoader().getResourceAsStream("images/TheShadowKing1.png");
                                 if (image == null) {
-                                    messageAction.addContent("""
-
-                                            # 어둠의군주
-
-                                            """);
+                                    messageAction.addContent("# 어둠의군주");
                                 } else {
                                     messageAction.addFiles(FileUpload.fromData(image, "image.png"));
                                 }
@@ -366,9 +359,10 @@ public class DiscordListener implements EventListener {
                 }
                 if (e.getButton().getId().startsWith(STR."mobSelection_\{u.getId()}_")) {
                     String decide = e.getButton().getId().substring("mobSelection__".length() + u.getId().length());
-                    if (decide.startsWith("denyCombat_"))
+                    if (decide.startsWith("denyCombat_")){
+                        isCombating.remove(u.getId());
                         e.reply(STR."\{getMobByUUID(UUID.fromString(decide.substring("denyCombat_".length()))).destroy().name}과(와)의 싸움에서 도망쳤습니다..").queue();
-                    else if (decide.startsWith("acceptCombat_"))
+                    } else if (decide.startsWith("acceptCombat_"))
                         e.reply("싸움을 승낙했습니다!").addActionRow(getCombatProcessButtons(u, getMobByUUID(UUID.fromString(decide.substring("acceptCombat_".length()))), false)).queue();
                     e.getChannel().editMessageComponentsById(e.getMessageId()).queue();
                 }
@@ -379,6 +373,8 @@ public class DiscordListener implements EventListener {
                         case "attack":
                             mob.applyAction(STR."damage-\{playerData.atk}", playerData);
                             if (!mob.isAlive()) {
+                                playerData.level = playerData.level.add(BigInteger.ONE);
+                                isCombating.remove(u.getId());
                                 e.reply(STR."당신의 공격!\n\{mob.name}(이)가 쓰러졌다!\n레벨이 1 올랐습니다.").addActionRow(getStatPointUseButtons(u)).queue();
                                 break;
                             }
@@ -404,7 +400,10 @@ public class DiscordListener implements EventListener {
                                 mob.removeNextAction();
                                 action = e.reply(STR."\{mob.name}의 공격!\nhp \{applyDamage.negate()}").addEmbeds(getMobInfoEmbed(mob).build()).addActionRow(getCombatProcessButtons(u, mob, false));
                             }
-                            if (!playerData.isAlive()) action.setComponents().addContent("\n당신은 사망하셨습니다.");
+                            if (!playerData.isAlive()) {
+                                isCombating.remove(u.getId());
+                                action.setComponents().addContent("\n당신은 사망하셨습니다.");
+                            }
                             action.queue();
                             mob.opponentGuarding = false;
                             break;
@@ -449,6 +448,7 @@ public class DiscordListener implements EventListener {
                                 Map.entry("4|찰박거리기", "heal-2")
                         );
                         e.getMessage().reply("몬스터가 출현했습니다!").addEmbeds(getMobInfoEmbed(mob).build()).addActionRow(getCombatAcceptButtons(u, mob)).queue();
+                        isCombating.add(u.getId());
                         e.getMessage().addReaction(Emoji.fromUnicode("✅")).queue();
                     }
                 }
@@ -500,6 +500,16 @@ public class DiscordListener implements EventListener {
                 new ButtonImpl(STR."statup_\{u.getId()}_dex_\{level}", "민첩", ButtonStyle.SECONDARY, false, null),
                 new ButtonImpl(STR."statup_\{u.getId()}_luck_\{level}", "운", ButtonStyle.SECONDARY, false, null)
         ));
+    }
+    public static List<Button> getJobButtons(User u) {
+        List<Job> jobs = Arrays.stream(Job.values()).skip(1).toList();
+        List<Button> buttons = new ArrayList<>();
+        for (int i = 0; i < jobs.size(); i++) {
+            for (int max = Math.min(i + 5, jobs.size()); i < max; i++) {
+                buttons.add(new ButtonImpl(STR."jobSelection_\{u.getId()}_\{jobs.get(i).toString()}", jobs.get(i).getName(), ButtonStyle.SECONDARY, false, jobs.get(i).getEmoji()));
+            }
+        }
+        return buttons;
     }
 
     public static MobData getMobByUUID(UUID uuid) {
