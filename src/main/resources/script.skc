@@ -136,7 +136,7 @@ teaSelection_{user.id}_talkOutside|밖에서 이야기한다|🏠
 ∮
 ```ansi
 [1;34m<노인>[0;37m
-그래, 그 아이의 직업도 {user.job.name}이였지..
+그래, 그 아이의 직업도 {user.job.name}(이)였지..
 왜인지 너에게서 그 아이와 비슷한 기운이 느껴지는것 같기도 하다네
 ```
 ⇒ story++
