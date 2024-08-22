@@ -32,7 +32,7 @@ public class DiscordListener implements EventListener {
                 User u = e.getUser();
                 if (e.getName().equals("trpg")) {
                     if (!data.getOrDefault(u.getId(), new PlayerData()).hasPlayed) {
-                        InputStream image = Main.class.getClassLoader().getResourceAsStream("images/Ep1/startAdventure.png");
+                        InputStream image = Main.class.getClassLoader().getResourceAsStream("images/startAdventure.png");
                         if (image == null) {
                             e.reply("당신의 신비한 모험이 지금 시작됩니다\n계속 진행하려면 이 명령어를 계속 입력해주세요.").queue();
                         } else {

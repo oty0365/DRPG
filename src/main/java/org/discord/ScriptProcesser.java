@@ -69,9 +69,9 @@ public class ScriptProcesser {
             action.addContent(message.substring(0, message.indexOf("[resources:")));
             message = message.substring(message.indexOf("[resources:") + 11);
             String[] fileAction = message.substring(0, message.indexOf("]")).split("\\|");
-            InputStream image = Main.class.getClassLoader().getResourceAsStream(fileAction[0]);
-            if (image != null)
-                action.addFiles(FileUpload.fromData(image, "image.png"));
+            InputStream resource = Main.class.getClassLoader().getResourceAsStream(fileAction[0]);
+            if (resource != null)
+                action.addFiles(FileUpload.fromData(resource, STR."resource\{fileAction[0].substring(fileAction[0].lastIndexOf("."))}"));
             else
                 action.addContent(fileAction[1]);
             message = message.substring(message.indexOf("]") + 1);
