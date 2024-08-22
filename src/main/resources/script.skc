@@ -3,7 +3,7 @@
 ⇒ story++
 ∮
 눈을 희미하게 뜬 당신은 수많은 과거의 기억들을 떠올립니다..
-[images/Ep0/Ep0SelectionTime.png|# Ep0.선택의 시간]
+[resources:images/Ep0/Ep0SelectionTime.png|# Ep0.선택의 시간]
 과거의 기억들 중 하나를 선택하세요
 ⇒ Actions[Implemented[jobs]] ⇒ story++
 ∮
@@ -23,7 +23,7 @@
 ⇒ story++
 ∮
 여러 묘지를 지난 당신은 그 가운데에 덩그러니 놓여있는 한 허름한 집을 보았습니다.
-[images/Ep1/Ep1TheHouseKeeper.png|# Ep1.무덤지기의 집]
+[resources:images/Ep1/Ep1TheHouseKeeper.png|# Ep1.무덤지기의 집]
 허름해 보이는 집에는 아무도 살지 않을 것 같습니다..
 ⇒ story++
 ∮
@@ -41,7 +41,7 @@
 ⇒ story++
 ∮
 인자하고 범접할 수 없는 아우라를 풍기는 노인이 당신 앞에 섭니다..
-[images/Ep1/TheOldMan.png|# 노인]
+[resources:images/Ep1/TheOldMan.png|# 노인]
 ⇒ story++
 ∮
 ```ansi
@@ -72,7 +72,7 @@ teaSelection_{user.id}_talkOutside|밖에서 이야기한다|🏠
 용들이 나타나기 전까진 말이지..
 그것들은 보이는 모든것들을 불로 태웠고 세상은 재로 물들어 잿빛이 되었단다..
 ```
-[images/Ep1/DragonRule.png|# 나이트 워커 - 밤길을 걷는 자 -
+[resources:images/Ep1/DragonRule.png|# 나이트 워커 - 밤길을 걷는 자 -
 용의 군주가 이끌던 군대의 막강한 이명가진 자들중 하나.
 밤에만 활동하며 지나가는 곳엔 항상 푸른 폭발이 잇따른다..]
 ⇒ story++
@@ -106,7 +106,7 @@ teaSelection_{user.id}_talkOutside|밖에서 이야기한다|🏠
 목소리를 따라 어느 깊은 숲으로 향하니 그곳은 어둠밖에 없었단다
 그 어둠 속에서, 어떤 존재가 와서 말을 걸었어
 ```
-[images/Ep1/TheShadowKing1.png|# 어둠의군주]
+[resources:images/Ep1/TheShadowKing1.png|# 어둠의군주]
 ⇒ story++
 ∮
 ```ansi
@@ -169,7 +169,7 @@ teaSelection_{user.id}_talkOutside|밖에서 이야기한다|🏠
 ⇒ story++
 ∮
 그 때, 갑자기 멀리에서 무언가 폭발하는 소리가 들립니다..
-[images/Ep1/TremendousExplosion.png|# 대폭발]
+[resources:images/Ep1/TremendousExplosion.png|# 대폭발]
 ⇒ story++
 ∮
 ```ansi

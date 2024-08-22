@@ -65,9 +65,9 @@ public class ScriptProcesser {
     }
 
     private static ReplyCallbackAction getReplyMessage(String message, ReplyCallbackAction action) {
-        while (message.contains("[images/")) {
-            action.addContent(message.substring(0, message.indexOf("[images/")));
-            message = message.substring(message.indexOf("[images/") + 1);
+        while (message.contains("[resources:")) {
+            action.addContent(message.substring(0, message.indexOf("[resources:")));
+            message = message.substring(message.indexOf("[resources:") + 11);
             String[] fileAction = message.substring(0, message.indexOf("]")).split("\\|");
             InputStream image = Main.class.getClassLoader().getResourceAsStream(fileAction[0]);
             if (image != null)
