@@ -7,6 +7,7 @@ import net.dv8tion.jda.api.interactions.components.buttons.ButtonStyle;
 import net.dv8tion.jda.api.requests.restaction.interactions.ReplyCallbackAction;
 import net.dv8tion.jda.api.utils.FileUpload;
 import net.dv8tion.jda.internal.interactions.component.ButtonImpl;
+import org.discord.utils.korean.KoreanUtils;
 
 import java.io.InputStream;
 import java.util.Arrays;
@@ -65,6 +66,12 @@ public class ScriptProcesser {
     }
 
     private static ReplyCallbackAction getReplyMessage(String message, ReplyCallbackAction action) {
+        while (message.contains("[postposition:")) {
+            String temp = message.substring(0, message.indexOf("[postposition:"));
+            message = message.substring(message.indexOf("[postposition:") + 14);
+            String[] postPositionAction = message.substring(0, message.indexOf("]")).split("\\|");
+            message = temp + KoreanUtils.getPostposition(postPositionAction[0], postPositionAction[1], postPositionAction[2]) + message.substring(message.indexOf("]") + 1);
+        }
         while (message.contains("[resources:")) {
             action.addContent(message.substring(0, message.indexOf("[resources:")));
             message = message.substring(message.indexOf("[resources:") + 11);

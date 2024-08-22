@@ -14,6 +14,7 @@ import net.dv8tion.jda.api.interactions.components.buttons.ButtonStyle;
 import net.dv8tion.jda.api.requests.restaction.interactions.ReplyCallbackAction;
 import net.dv8tion.jda.api.utils.FileUpload;
 import net.dv8tion.jda.internal.interactions.component.ButtonImpl;
+import org.discord.utils.korean.KoreanUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.InputStream;
@@ -160,7 +161,7 @@ public class DiscordListener implements EventListener {
                     String decide = e.getButton().getId().substring("mobSelection__".length() + u.getId().length());
                     if (decide.startsWith("denyCombat_")){
                         isCombating.remove(u.getId());
-                        e.reply(STR."\{getMobByUUID(UUID.fromString(decide.substring("denyCombat_".length()))).destroy().name}과(와)의 싸움에서 도망쳤습니다..").queue();
+                        e.reply(STR."\{KoreanUtils.getPostposition(getMobByUUID(UUID.fromString(decide.substring("denyCombat_".length()))).destroy().name, "과", "와")}의 싸움에서 도망쳤습니다..").queue();
                     } else if (decide.startsWith("acceptCombat_"))
                         e.reply("싸움을 승낙했습니다!").addActionRow(getCombatProcessButtons(u, getMobByUUID(UUID.fromString(decide.substring("acceptCombat_".length()))), false)).queue();
                     e.getChannel().editMessageComponentsById(e.getMessageId()).queue();
@@ -174,7 +175,7 @@ public class DiscordListener implements EventListener {
                             if (!mob.isAlive()) {
                                 playerData.level = playerData.level.add(BigInteger.ONE);
                                 isCombating.remove(u.getId());
-                                e.reply(STR."당신의 공격!\n\{mob.name}(이)가 쓰러졌다!\n레벨이 1 올랐습니다.").addActionRow(getStatPointUseButtons(u)).queue();
+                                e.reply(STR."당신의 공격!\n\{KoreanUtils.getPostposition(mob.name, "이", "가")} 쓰러졌다!\n레벨이 1 올랐습니다.").addActionRow(getStatPointUseButtons(u)).queue();
                                 break;
                             }
                             e.reply("당신의 공격!").addEmbeds(getMobInfoEmbed(mob).build()).addActionRow(getCombatProcessButtons(u, mob, true)).queue();
@@ -193,7 +194,7 @@ public class DiscordListener implements EventListener {
                                 """).addEmbeds(getMobInfoEmbed(mob).build()).addActionRow(getCombatProcessButtons(u, mob, false));
                             } else {
                                 BigInteger applyDamage = mob.damage;
-                                if (mob.opponentGuarding) applyDamage = applyDamage.subtract(playerData.def);
+                                if (mob.opponentGuarding) applyDamage = applyDamage.subtract(playerData.def).max(BigInteger.ZERO);
                                 mob.applyAction(STR."attack-\{applyDamage}", playerData);
                                 playerData.currentHp = playerData.currentHp.subtract(applyDamage);
                                 mob.removeNextAction();
@@ -246,7 +247,19 @@ public class DiscordListener implements EventListener {
                                 Map.entry("1|포식", "attack-0"),
                                 Map.entry("4|찰박거리기", "heal-2")
                         );
-                        e.getMessage().reply("몬스터가 출현했습니다!").addEmbeds(getMobInfoEmbed(mob).build()).addActionRow(getCombatAcceptButtons(u, mob)).queue();
+                        e.getMessage().replyEmbeds(getMobInfoEmbed(mob).setAuthor("몬스터가 출현했습니다!").build()).addActionRow(getCombatAcceptButtons(u, mob)).queue();
+                        isCombating.add(u.getId());
+                        e.getMessage().addReaction(Emoji.fromUnicode("✅")).queue();
+                    }
+                    if (e.getMessage().getContentRaw().startsWith("!몹테스트 ")) {
+                        String[] args = e.getMessage().getContentRaw().substring("!몹테스트 ".length()).split(" ");
+                        List<Map.Entry<String, String>> skills = new ArrayList<>();
+                        for (int i = 5; i < args.length; i++) {
+                            String[] skillData = args[i].split("->");
+                            skills.add(Map.entry(skillData[0], skillData[1]));
+                        }
+                        MobData mob = new MobData(args[0], args[1], new BigInteger(args[2]), new BigInteger(args[3]), new BigInteger(args[4]), skills);
+                        e.getMessage().replyEmbeds(getMobInfoEmbed(mob).setAuthor("몬스터가 출현했습니다!").build()).addActionRow(getCombatAcceptButtons(u, mob)).queue();
                         isCombating.add(u.getId());
                         e.getMessage().addReaction(Emoji.fromUnicode("✅")).queue();
                     }

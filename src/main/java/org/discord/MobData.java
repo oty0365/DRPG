@@ -23,6 +23,17 @@ public class MobData {
         DiscordListener.registerMob(uuid, this);
     }
 
+    public MobData(String name, String description, BigInteger currentHp, BigInteger maxHp, BigInteger damage, Collection<Map.Entry<String, String>> skillActions) {
+        this.name = name;
+        this.description = description;
+        this.currentHp = currentHp;
+        this.maxHp = maxHp;
+        this.damage = damage;
+        skills = new LinkedList<>(skillActions.stream().map(s -> Map.entry(s.getKey().split("\\|"), s.getValue())).toList());
+        do uuid = UUID.randomUUID(); while (DiscordListener.getMobByUUID(uuid) != null);
+        DiscordListener.registerMob(uuid, this);
+    }
+
     public Map.Entry<String[], String> getNextSkill() {
         return skills.peek();
     }
