@@ -70,7 +70,8 @@ public class ScriptProcesser {
             String temp = message.substring(0, message.indexOf("[postposition:"));
             message = message.substring(message.indexOf("[postposition:") + 14);
             String[] postPositionAction = message.substring(0, message.indexOf("]")).split("\\|");
-            message = temp + KoreanUtils.getPostposition(postPositionAction[0], postPositionAction[1], postPositionAction[2]) + message.substring(message.indexOf("]") + 1);
+            String last = postPositionAction.length == 2 ? "" : postPositionAction[2];
+            message = temp + KoreanUtils.getPostposition(postPositionAction[0], postPositionAction[1], last) + message.substring(message.indexOf("]") + 1);
         }
         while (message.contains("[resources:")) {
             action.addContent(message.substring(0, message.indexOf("[resources:")));
