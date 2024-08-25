@@ -43,12 +43,8 @@ public class DiscordListener implements EventListener {
                         dat.hasPlayed = true;
                         data.put(u.getId(), dat);
                     } else {
-                        if (isCombating.contains(u.getId())) {
-                            e.reply("싸우는 중에는 스토리를 진행할 수 없습니다!").queue();
-                            return;
-                        }
-                        PlayerData playerData = data.get(u.getId());
-                        ScriptProcesser.accept(script.get(playerData.storyIndex), e, u);
+                        if (isCombating.contains(u.getId())) e.reply("싸우는 중에는 스토리를 진행할 수 없습니다!").queue();
+                        else ScriptProcesser.accept(script.get(Math.min(data.get(u.getId()).storyIndex, script.size() - 1)), e, u);
                     }
                     return;
                 }
@@ -93,7 +89,8 @@ public class DiscordListener implements EventListener {
                 }
                 if (e.getButton().getId().startsWith(STR."jobSelection_\{u.getId()}_")) {
                     if (!playerData.job.equals(Job.NONE)) {
-                        e.reply("이미 직업을 가지고 있습니다.").setEphemeral(true).queue();
+                        e.reply("이미 직업을 가지고 있습니다.").setEphemeral(true).addActionRow(getStoryProcessButton(u)).queue();
+                        e.getChannel().editMessageComponentsById(e.getMessageId()).queue();
                         return;
                     }
                     playerData.job = Job.valueOf(e.getButton().getId().substring("jobSelection__".length() + u.getId().length()));
@@ -212,6 +209,11 @@ public class DiscordListener implements EventListener {
                     }
                     e.getChannel().editMessageComponentsById(e.getMessageId()).queue();
                 }
+                if (e.getButton().getId().equals(STR."stuckStory_\{u.getId()}")) {
+                    playerData.storyIndex++;
+                    e.reply("스토리를 강제로 진행했습니다.").setEphemeral(true).queue();
+                    e.getChannel().editMessageComponentsById(e.getMessageId()).queue();
+                }
             }
             case MessageReceivedEvent e -> {
                 User u = e.getAuthor();
@@ -268,6 +270,10 @@ public class DiscordListener implements EventListener {
             default -> {
             }
         }
+    }
+
+    public static Button getStoryProcessButton(User u) {
+        return new ButtonImpl(STR."stuckStory_\{u.getId()}", "스토리 진행이 막히셨나요?", ButtonStyle.SECONDARY, false, Emoji.fromUnicode("‼️"));
     }
 
     public static EmbedBuilder getMobInfoEmbed(MobData mob) {
