@@ -31,7 +31,7 @@ public class DiscordListener implements EventListener {
         switch (event) {
             case SlashCommandInteractionEvent e -> {
                 User u = e.getUser();
-                if (e.getName().equals("trpg")) {
+                if (e.getName().equals("drpg")) {
                     if (!data.getOrDefault(u.getId(), new PlayerData()).hasPlayed) {
                         InputStream image = Main.class.getClassLoader().getResourceAsStream("images/startAdventure.png");
                         if (image == null) {
