@@ -22,9 +22,8 @@ public class FileUtils {
     public static void saveData(HashMap<String, PlayerData> data) {
         try {
             JsonObject o = new JsonObject();
-            for (Map.Entry<String, PlayerData> entry : data.entrySet()) {
+            for (Map.Entry<String, PlayerData> entry : data.entrySet())
                 o.addProperty(entry.getKey(), serialObject(entry.getValue()));
-            }
             Files.writeString(Path.of("saveData.dat"), o.toString());
         } catch (IOException e) {
             e.printStackTrace(System.err);
@@ -36,9 +35,8 @@ public class FileUtils {
             HashMap<String, PlayerData> result = new HashMap<>();
 
             JsonObject data = JsonParser.parseString(Files.readString(Path.of("saveData.dat"))).getAsJsonObject();
-            for (Map.Entry<String, JsonElement> entry : data.entrySet()) {
+            for (Map.Entry<String, JsonElement> entry : data.entrySet())
                 result.put(entry.getKey(), deSerialObject(entry.getValue().getAsString(), PlayerData.class));
-            }
             return result;
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace(System.err);

@@ -10,4 +10,12 @@ button2|이것은 매우 두번째 버튼|👍
 ∮
 이것은 매우 본인만 보이는 텍스트
 ⇒ Ephemeral ⇒ story++
+∮
 [postposition:{user.name}|이|가] 이것은 매우 조사설정이라고 이야기합니다
+⇒ story++
+∮
+문자열선택 테스트
+⇒ Actions[StringSelectMenu[SSMTest|문자열선택테스트
+|식별자1/선택명1/대충설명1
+|식별자2/선택명2/대충설명2
+]]

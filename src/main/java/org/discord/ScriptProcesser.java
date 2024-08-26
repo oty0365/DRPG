@@ -4,13 +4,17 @@ import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.components.buttons.ButtonStyle;
+import net.dv8tion.jda.api.interactions.components.selections.SelectOption;
 import net.dv8tion.jda.api.requests.restaction.interactions.ReplyCallbackAction;
 import net.dv8tion.jda.api.utils.FileUpload;
 import net.dv8tion.jda.internal.interactions.component.ButtonImpl;
+import net.dv8tion.jda.internal.interactions.component.StringSelectMenuImpl;
 import org.discord.utils.korean.KoreanUtils;
 
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.stream.Collectors;
 
 public class ScriptProcesser {
@@ -36,13 +40,16 @@ public class ScriptProcesser {
                         case "EntitySelectMenu":
                             action.addActionRow();
                             break;
-                        case "StringSelectMenu":
-                            action.addActionRow();
-                            break;
-                        case "TextInput":
-                            action.addActionRow();
-                            break;
                              */
+                        case "StringSelectMenu":
+                            String[] data = actionRow.substring("StringSelectMenu[".length(), actionRow.length() - 1).split("\\|");
+                            List<SelectOption> options = new ArrayList<>();
+                            for (int j = 2; j < data.length; j++) {
+                                String[] selectOpt = data[j].split("/");
+                                options.add(SelectOption.of(selectOpt[1], selectOpt[2]).withDescription(selectOpt[2]));
+                            }
+                            action.addActionRow(new StringSelectMenuImpl(data[0], data[1], 1, 1, false, options));
+                            break;
                         case "Implemented":
                             switch (actionRow.substring(actionRow.indexOf("[") + 1, actionRow.length() - 1)) {
                                 case "jobs":
